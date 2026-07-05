@@ -1,8 +1,7 @@
 from pathlib import Path
 
 from app.engines.analyzers.base import BaseAnalyzer
-from app.engines.analyzers.python_analyzer import PythonAnalyzer
-
+from app.engines.analyzers.python.analyzer import PythonAnalyzer
 
 ANALYZERS: dict[str, type[BaseAnalyzer]] = {
     ".py": PythonAnalyzer,
