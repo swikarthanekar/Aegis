@@ -10,6 +10,13 @@ from app.engines.analyzers.python.models import (
     FunctionInfo,
     PythonAnalysis,
 )
+from app.engines.analyzers.python.visitors.call_graph_visitor import CallGraphVisitor
+from app.engines.analyzers.python.models import (
+    CallInfo,
+    ClassInfo,
+    FunctionInfo,
+    PythonAnalysis,
+)
 
 class PythonAnalyzer(BaseAnalyzer):
     def analyze(self, file_path: Path) -> PythonAnalysis:
@@ -17,9 +24,11 @@ class PythonAnalyzer(BaseAnalyzer):
 
         import_visitor = ImportVisitor()
         symbol_visitor = SymbolVisitor()
+        call_visitor = CallGraphVisitor()
 
         import_visitor.visit(tree)
         symbol_visitor.visit(tree)
+        call_visitor.visit(tree)
 
         return PythonAnalysis(
             imports=import_visitor.imports,
@@ -30,5 +39,9 @@ class PythonAnalyzer(BaseAnalyzer):
             functions=[
                 FunctionInfo(**func)
                 for func in symbol_visitor.functions
+            ],
+            calls=[
+                CallInfo(**call)
+                for call in call_visitor.calls
             ]
         )

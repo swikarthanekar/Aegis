@@ -1,6 +1,12 @@
 from pydantic import BaseModel
 
 
+class CallInfo(BaseModel):
+    caller: str
+    callee: str
+    line: int
+
+
 class FunctionInfo(BaseModel):
     name: str
     line: int
@@ -18,3 +24,4 @@ class PythonAnalysis(BaseModel):
     imports: list[str]
     classes: list[ClassInfo]
     functions: list[FunctionInfo]
+    calls: list[CallInfo]
