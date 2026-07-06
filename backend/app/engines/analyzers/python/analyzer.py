@@ -17,6 +17,7 @@ from app.engines.analyzers.python.models import (
     FunctionInfo,
     PythonAnalysis,
 )
+from app.engines.analyzers.python.visitors.assignment_visitor import AssignmentVisitor
 
 class PythonAnalyzer(BaseAnalyzer):
     def analyze(self, file_path: Path) -> PythonAnalysis:
@@ -25,10 +26,14 @@ class PythonAnalyzer(BaseAnalyzer):
         import_visitor = ImportVisitor()
         symbol_visitor = SymbolVisitor()
         call_visitor = CallGraphVisitor()
+        assignment_visitor = AssignmentVisitor()
+        call_visitor.assignments = assignment_visitor.assignments
+
 
         import_visitor.visit(tree)
         symbol_visitor.visit(tree)
         call_visitor.visit(tree)
+        assignment_visitor.visit(tree)
 
         return PythonAnalysis(
             imports=import_visitor.imports,
